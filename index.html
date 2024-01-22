@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Solar Simples</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script>
+        // Cena, câmera e renderizador
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Adicionando luz
+        var light = new THREE.PointLight(0xffffff, 1, 0);
+        light.position.set(0, 0, 0); // Posição da luz no sol
+        scene.add(light);
+
+        // Criando esferas para os planetas
+        var planetGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        var planetMaterial = new THREE.MeshLambertMaterial({color: 0x888888}); // Cor cinza para todos os planetas
+        var planetMeshes = [];
+
+        var planetDistances = [3, 5, 7, 10, 15, 20, 25, 30]; // Distâncias arbitrárias dos planetas ao sol
+
+        planetDistances.forEach(function(distance, index) {
+            var planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
+            planetMesh.position.x = distance; // Posição x baseada na distância do sol
+            scene.add(planetMesh);
+            planetMeshes.push(planetMesh);
+        });
+
+        // Posição da câmera
+        camera.position.z = 35;
+
+        // Função de animação para rodar os planetas
+        var animate = function () {
+            requestAnimationFrame(animate);
+
+            // Rotação dos planetas
+            planetMeshes.forEach(function(mesh, index) {
+                mesh.rotation.y += 0.005 * (index + 1); // Velocidade de rotação
+                mesh.position.x = planetDistances[index] * Math.cos(mesh.rotation.y);
+                mesh.position.z = planetDistances[index] * Math.sin(mesh.rotation.y);
+            });
+
+            renderer.render(scene, camera);
+        };
+
+        animate();
+    </script>
+</body>
+</html>
