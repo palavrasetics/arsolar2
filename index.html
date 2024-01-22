@@ -12,6 +12,7 @@
 <body>
     <script src="https://threejs.org/build/three.js"></script>
     <script>
+        renderer.setClearColor( 0x87ceeb ); // Um exemplo de azul céu em hexadecimal
         // Cena, câmera e renderizador
         var scene = new THREE.Scene();
         var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
