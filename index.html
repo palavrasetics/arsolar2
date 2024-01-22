@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema Solar 3D e AR</title>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ar-js-org/ar.js@3.3.4/aframe/build/aframe-ar.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        #arContainer { display: none; } /* Escondido por padrão, pode ser ativado conforme necessário */
+    </style>
+</head>
+<body>
+    <!-- Container para Three.js -->
+    <div id="threeContainer"></div>
+
+    <!-- Container para A-Frame e AR.js -->
+    <div id="arContainer">
+        <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
+            <a-marker preset="hiro">
+                <a-box position='0 0.5 0' material='color: blue;'></a-box>
+            </a-marker>
+            <a-entity camera></a-entity>
+        </a-scene>
+    </div>
+
+    <script>
+        // Cena, câmera e renderizador Three.js
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('threeContainer').appendChild(renderer.domElement);
+
+        // Adicionando luz
+        var light = new THREE.PointLight(0xffffff, 1, 0);
+        light.position.set(0, 0, 0);
+        scene.add(light);
+
+        // Criando esferas para os planetas
+        var geometry = new THREE.SphereGeometry(0.5, 32, 32);
+        var material = new THREE.MeshLambertMaterial({ color: 0x888888 });
+        var sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
+
+        // Posição da câmera
+        camera.position.z = 5;
+
+        // Função de animação
+        var animate = function () {
+            requestAnimationFrame(animate);
+
+            // Animação dos planetas
+            sphere.rotation.x += 0.01;
+            sphere.rotation.y += 0.01;
+
+            renderer.render(scene, camera);
+        };
+
+        animate();
+    </script>
+</body>
+</html>
